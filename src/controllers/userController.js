@@ -115,6 +115,7 @@ const uploadSingleToCloudinary = (file, folder) => {
 
 // POST /api/auth/send-otp (Step 1: Send OTP via WhatsApp)
 exports.sendOtp = async (req, res) => {
+  console.log("Login route test")
   const { phone } = req.body;
   if (!phone) return res.status(400).json({ message: 'Phone required' });
 
@@ -134,7 +135,7 @@ exports.sendOtp = async (req, res) => {
   // Send OTP via MSG91 WhatsApp
   try {
       const test = await sendWhatsAppOtpViaMSG91(phone, otp);
-      console.log("test",test)
+      // console.log("test",test)
     } catch (waError) {
       console.error(
         "MSG91 WhatsApp Error:",
