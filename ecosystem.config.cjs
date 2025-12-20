@@ -10,6 +10,7 @@ module.exports = {
       max_restarts: 20,
       min_uptime: "15s",
       max_memory_restart: "500M",        // Restart if memory > 800MB
+      env_file: "/home/ubuntu/env/mwg_backend.env",
       env: {
         NODE_ENV: "development",
         PORT: 5000
