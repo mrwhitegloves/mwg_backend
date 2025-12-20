@@ -135,7 +135,7 @@ exports.sendOtp = async (req, res) => {
   // Send OTP via MSG91 WhatsApp
   try {
       const test = await sendWhatsAppOtpViaMSG91(phone, otp);
-      // console.log("test",test)
+      console.log("test send otp")
     } catch (waError) {
       console.error(
         "MSG91 WhatsApp Error:",
@@ -173,7 +173,6 @@ exports.verifyOtp = async (req, res) => {
 
   // Generate JWT
   const token = jwt.sign({ userId: user._id, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
-  console.log("user-user: ",user)
 
   // Check if first time
   if (!user.name) { // Assuming name filled in profile
