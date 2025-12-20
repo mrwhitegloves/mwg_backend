@@ -2,17 +2,59 @@ name: Deploy Backend
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   deploy:
     runs-on: self-hosted
 
+    env:
+      NODE_ENV: production
+      PORT: ${{ secrets.PORT }}
+
+      MONGO_URI: ${{ secrets.MONGO_URI }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+
+      RAZORPAY_KEY_ID: ${{ secrets.RAZORPAY_KEY_ID }}
+      RAZORPAY_KEY_SECRET: ${{ secrets.RAZORPAY_KEY_SECRET }}
+
+      SMTP_HOST: ${{ secrets.SMTP_HOST }}
+      SMTP_PORT: ${{ secrets.SMTP_PORT }}
+      SMTP_SECURE: ${{ secrets.SMTP_SECURE }}
+      SMTP_USER: ${{ secrets.SMTP_USER }}
+      SMTP_PASS: ${{ secrets.SMTP_PASS }}
+
+      SOCKET_IO_ORIGIN: ${{ secrets.SOCKET_IO_ORIGIN }}
+
+      CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+      CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+      CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+      CLOUDINARY_URL: ${{ secrets.CLOUDINARY_URL }}
+
+      TWILIO_SID: ${{ secrets.TWILIO_SID }}
+      TWILIO_TOKEN: ${{ secrets.TWILIO_TOKEN }}
+      TWILIO_WHATSAPP_NUMBER: ${{ secrets.TWILIO_WHATSAPP_NUMBER }}
+
+      QUICK_EKYC_API_KEY: ${{ secrets.QUICK_EKYC_API_KEY }}
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      MSG91_AUTH_KEY: ${{ secrets.MSG91_AUTH_KEY }}
+
+      GOOGLE_SERVICE_ACCOUNT_KEY: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
 
       - name: Install dependencies
         run: npm install
 
-      - name: Reload backend
-        run: pm2 startOrReload ecosystem.config.cjs --update-env
+      - name: Restart backend with PM2
+        run: |
+          pm2 delete all || true
+          pm2 start ecosystem.config.cjs --env production --update-env
+          pm2 save
