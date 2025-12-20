@@ -3,7 +3,7 @@ module.exports = {
     {
       name: "mwg_backend",
       script: "src/server.js",           // ← YOUR ACTUAL ENTRY POINT
-      instances: "max",                  // Use all CPU cores (cluster mode)
+      instances: 1,                  // Use all CPU cores (cluster mode)
       exec_mode: "fork",
       watch: false,                      // Set true in dev if needed
       autorestart: true,
