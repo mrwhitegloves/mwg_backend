@@ -583,7 +583,7 @@ exports.vehicle = async (req, res) => {
 
     // 3. GEMINI USING OFFICIAL SDK — PERFECT OUTPUT EVERY TIME
     const model = genAI.getGenerativeModel({ 
-      model: "gemini-2.5-flash", // This works perfectly with SDK
+      model: "gemini-2.5-flash",
     });
 
     const prompt = `Classify this Indian or International car and two wheeler into ONE segment only: Sedan, Hatchback, SUV, Two wheeler.
