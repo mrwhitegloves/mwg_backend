@@ -1062,6 +1062,53 @@ exports.addDeliveryAddress = async (req, res) => {
   }
 };
 
+// PUT /api/user/delivery-address/:addressId
+exports.updateDeliveryAddress = async (req, res) => {
+  const { addressId } = req.params;
+  const { name, phone, street, city, state, postalCode, label } = req.body;
+
+  if (!name || !phone || !street || !city || !postalCode) {
+    return res.status(400).json({ error: 'Name, phone, street, city, and postal code are required' });
+  }
+
+  try {
+    const user = await User.findById(req.user.userId);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    // Find the address index
+    const addressIndex = user.deliveryAddresses.findIndex(
+      (addr) => addr._id.toString() === addressId
+    );
+
+    if (addressIndex === -1) {
+      return res.status(404).json({ error: 'Address not found' });
+    }
+
+    // Update the address
+    user.deliveryAddresses[addressIndex] = {
+      ...user.deliveryAddresses[addressIndex],
+      name,
+      phone,
+      street,
+      city,
+      state: state || user.deliveryAddresses[addressIndex].state,
+      postalCode: postalCode || user.deliveryAddresses[addressIndex].postalCode,
+      label: label || user.deliveryAddresses[addressIndex].label,
+    };
+
+    await user.save();
+
+    res.json({
+      message: 'Delivery address updated successfully',
+      address: user.deliveryAddresses[addressIndex],
+      deliveryAddresses: user.deliveryAddresses,
+    });
+  } catch (error) {
+    console.error('Update Delivery Address Error:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
 // GET /api/user/delivery-addresses
 exports.getDeliveryAddresses = async (req, res) => {
   try {
